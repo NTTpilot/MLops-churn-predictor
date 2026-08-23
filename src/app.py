@@ -7,15 +7,36 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 from typing import Literal, Optional, Union, List
 import uvicorn
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 
 # ─────────────────────────────────────────────
 # 1. FastAPI App
 # ─────────────────────────────────────────────
+
 app = FastAPI(
     title="Telecom Churn Prediction API",
     description="Type-safe REST API serving the ChurnXGBoost model from MLflow",
     version="1.0.0"
 )
+
+# Enable CORS (so the frontend can call the API from anywhere)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Serve static files (HTML/CSS/JS) from src/static/
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Redirect root "/" to the landing page
+@app.get("/")
+async def root():
+    return RedirectResponse(url="/static/index.html")
 
 # ─────────────────────────────────────────────
 # 2. Load Model Directly from Run Artifacts
