@@ -1,0 +1,128 @@
+:root {
+    --bg: #eef1f6; --surface: #fff; --ink: #14213d; --muted: #5b6578; --line: #dde2ec;
+    --field: #f6f8fb; --accent: #2b50e6; --accent-ink: #fff; --err: #c7392a;
+    --panel: #14213d; --panel-ink: #f2f5fb; --panel-muted: #9aa7c2; --panel-track: #26345a;
+    --low: #2fbf94; --mid: #f0b429; --high: #ff6b57;
+    color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0b101d; --surface: #131b2f; --ink: #e8edf8; --muted: #9aa7c2; --line: #25304c;
+        --field: #0e1527; --accent: #7a93ff; --accent-ink: #0b101d; --err: #ff8a7a;
+        --panel: #1b2745; --panel-track: #2c3a63;
+    }
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.5 "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-variant-numeric: tabular-nums;
+}
+.shell { max-width: 1080px; margin: 0 auto; padding: 40px 20px 64px; }
+.head h1 { margin: 0 0 4px; font-size: 1.9rem; font-weight: 800; letter-spacing: -0.02em; }
+.head p { margin: 0 0 28px; color: var(--muted); }
+
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; align-items: start; }
+
+/* Form */
+.form { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 0 28px 28px; }
+.group { padding: 26px 0; border-bottom: 1px solid var(--line); }
+.group h2 { margin: 0 0 16px; font-size: 1rem; font-weight: 700; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px 20px; }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+legend, .lbl { display: block; padding: 0; margin-bottom: 6px; font-size: 0.82rem; font-weight: 600; }
+
+select {
+    width: 100%; height: 40px; padding: 0 12px; font: inherit; font-size: 0.95rem;
+    color: var(--ink); background: var(--field); border: 1px solid var(--line); border-radius: 8px;
+}
+select:disabled { opacity: 0.55; cursor: not-allowed; }
+.input {
+    display: flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px;
+    background: var(--field); border: 1px solid var(--line); border-radius: 8px; color: var(--muted);
+}
+.input input {
+    flex: 1; min-width: 0; height: 100%; padding: 0; border: 0; outline: 0;
+    background: none; color: var(--ink); font: inherit; font-size: 0.95rem;
+}
+.input:has(input[aria-invalid="true"]) { border-color: var(--err); }
+select:focus-visible, .input:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
+.err { margin: 6px 0 0; font-size: 0.8rem; color: var(--err); }
+.hint { margin: 6px 0 0; font-size: 0.78rem; color: var(--muted); }
+.err:empty { display: none; }
+
+.seg {
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; padding: 3px;
+    background: var(--field); border: 1px solid var(--line); border-radius: 8px;
+}
+.seg label { position: relative; }
+.seg input { position: absolute; opacity: 0; inset: 0; }
+.seg span {
+    display: block; padding: 6px 10px; text-align: center; font-size: 0.9rem;
+    color: var(--muted); border-radius: 6px; cursor: pointer;
+}
+.seg input:checked + span {
+    background: var(--surface); color: var(--ink); font-weight: 700;
+    box-shadow: 0 1px 2px rgba(20, 33, 61, 0.18), inset 0 0 0 1px var(--line);
+}
+.seg input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.actions { display: flex; gap: 12px; padding-top: 26px; }
+button { font: inherit; cursor: pointer; border-radius: 10px; height: 46px; }
+.primary {
+    flex: 1; border: 0; background: var(--accent); color: var(--accent-ink);
+    font-weight: 700; display: inline-flex; align-items: center; justify-content: center;
+}
+.primary:hover { filter: brightness(1.08); }
+.primary:disabled { cursor: progress; opacity: 0.75; }
+.primary.loading::after {
+    content: ""; width: 14px; height: 14px; margin-left: 10px; border-radius: 50%;
+    border: 2px solid currentColor; border-right-color: transparent; animation: spin 0.7s linear infinite;
+}
+.ghost { padding: 0 20px; background: none; color: var(--ink); border: 1px solid var(--line); }
+.ghost:hover { background: var(--field); }
+button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* Result panel */
+.panel {
+    position: sticky; top: 24px; padding: 26px 24px 28px; border-radius: 14px;
+    background: var(--panel); color: var(--panel-ink); text-align: center;
+}
+.panel h2 { margin: 0 0 14px; font-size: 1rem; font-weight: 700; text-align: left; }
+.dial { position: relative; }
+.dial svg { display: block; width: 100%; height: auto; }
+.dial path { fill: none; stroke-width: 14; }
+.track { stroke: var(--panel-track); }
+.arc {
+    stroke: var(--tone, var(--panel-track)); stroke-dasharray: 100 100; stroke-dashoffset: 100;
+    transition: stroke-dashoffset 0.9s cubic-bezier(0.2, 0.7, 0.2, 1), stroke 0.3s;
+}
+.pct {
+    position: absolute; left: 0; right: 0; bottom: 2px; font-size: 2.9rem;
+    font-weight: 800; letter-spacing: -0.03em; line-height: 1;
+}
+.panel[data-tone="low"] { --tone: var(--low); }
+.panel[data-tone="mid"] { --tone: var(--mid); }
+.panel[data-tone="high"] { --tone: var(--high); }
+.verdict { margin: 18px 0 8px; font-size: 1.25rem; font-weight: 700; }
+.band {
+    display: inline-block; padding: 3px 12px; border-radius: 999px; font-size: 0.82rem; font-weight: 700;
+    color: var(--panel); background: var(--tone);
+}
+.detail { margin: 12px auto 0; max-width: 28ch; font-size: 0.9rem; color: var(--panel-muted); }
+.error {
+    margin: 14px 0 0; padding: 10px 12px; border-radius: 8px; font-size: 0.88rem; text-align: left;
+    background: rgba(255, 107, 87, 0.14); color: #ffb3a8;
+}
+.panel[data-state="loading"] .dial, .panel[data-state="loading"] .verdict { opacity: 0.45; }
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; }
+    .panel { position: static; }
+    .form { padding: 0 18px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .arc { transition: none; }
+    .primary.loading::after { animation-duration: 2s; }
+}

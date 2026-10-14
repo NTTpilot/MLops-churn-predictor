@@ -12,6 +12,7 @@ pip-log.txt
 
 # Jupyter
 .ipynb_checkpoints/
+src/train.ipynb
 
 # IDEs
 .vscode/

@@ -41,6 +41,7 @@ htmlcov/
 # ============================
 .ipynb_checkpoints/
 *.ipynb_checkpoints
+src/train.ipynb
 
 # ============================
 # Environment & secrets
