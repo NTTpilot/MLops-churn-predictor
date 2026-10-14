@@ -72,4 +72,5 @@ docker-compose up --build
 
 ## Notes
 
-The API expects customer data in the same format used during training, including categorical fields and billing information. Restart the API after training so it loads the latest model artifact.
+- The API expects customer data in the same format used during training, including categorical fields and billing information. Restart the API after training so it loads the latest model artifact.
+- Like I said in the previous commit message the model defaults to a 0.5 threshold instead of 0.6. Will be fixed soon.
